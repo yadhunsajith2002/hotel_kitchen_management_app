@@ -1,38 +1,68 @@
 import 'package:flutter/material.dart';
-import 'package:hotel_kitchen_management_app/Services/auth_services.dart';
-import 'package:hotel_kitchen_management_app/admin/screens/admin_home/admin_home.dart';
 import 'package:hotel_kitchen_management_app/pages/auth/login_screen/login_screen.dart';
-import 'package:hotel_kitchen_management_app/pages/chef_home_screen/chef_home_screen.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:hotel_kitchen_management_app/pages/chef/chef_home_screen/chef_home_screen.dart';
+import 'package:hotel_kitchen_management_app/services/auth_services.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CreateAccountController extends ChangeNotifier {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController chefNameController = TextEditingController();
 
   String? emailError;
   String? passwordError;
   String? selectedRole;
+  bool isLoading = false; // Add isLoading variable
 
   final GlobalKey<FormState> CformKey = GlobalKey<FormState>();
 
   Future<void> createAccount(BuildContext context) async {
     if (_validate()) {
-      // Reset error messages
-      _resetErrors();
+      try {
+        // Start loading
+        setLoading(true);
 
-      // Call the AuthService to create an account
-      await AuthService().createAccount(
-        emailController.text.trim(),
-        passwordController.text.trim(),
-      );
+        // Create an account in Firebase Authentication
+        await AuthService().createAccount(
+          emailController.text.trim(),
+          passwordController.text.trim(),
+        );
 
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ChefHomeScreen(),
-        ),
-        (route) => false,
-      );
+        // Store chef information in Firestore
+        await _storeChefInFirestore();
+
+        // Navigate to the appropriate screen
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => ChefHomeScreen()),
+          (route) => false,
+        );
+      } catch (e) {
+        print("Error creating account: $e");
+        // Handle errors as needed
+      } finally {
+        // Stop loading
+        setLoading(false);
+      }
+    }
+  }
+
+  Future<void> _storeChefInFirestore() async {
+    try {
+      // Get the current user
+      // var user = await AuthService().getCurrentUser();
+
+      // Store chef information in Firestore with automatically generated ID
+      var chefRef = FirebaseFirestore.instance.collection('chefs').doc();
+      await chefRef.set({
+        'id': chefRef.id,
+        'chefName': chefNameController.text.trim(),
+        'email': emailController.text.trim(),
+        // Add other chef information if needed
+      });
+    } catch (e) {
+      print("Error storing chef in Firestore: $e");
+      // Handle errors as needed
     }
   }
 
@@ -50,6 +80,12 @@ class CreateAccountController extends ChangeNotifier {
     return isValid;
   }
 
+  void setLoading(bool value) {
+    // Set loading state
+    isLoading = value;
+    notifyListeners();
+  }
+
   void _resetErrors() {
     // Reset error messages
     emailError = null;
@@ -65,7 +101,7 @@ class CreateAccountController extends ChangeNotifier {
   }
 
   void goToCreateAccount(BuildContext context) {
-    // Navigate to the create account screen
+    // Navigate to the login screen
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => LoginScreen()),

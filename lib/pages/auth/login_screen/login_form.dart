@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hotel_kitchen_management_app/admin/screens/admin_home/admin_home.dart';
+import 'package:hotel_kitchen_management_app/admin/screens/admin_dashboard/admin_dashBoard_screen.dart';
 import 'package:hotel_kitchen_management_app/controller/login_controllers/login_controller.dart';
 import 'package:hotel_kitchen_management_app/utils/colors.dart';
 import 'package:hotel_kitchen_management_app/utils/text_styles.dart';
@@ -102,17 +102,34 @@ class LoginForm extends StatelessWidget {
                 ),
               ],
             ),
-            ElevatedButton(
-              onPressed: () async {
+            InkWell(
+              onTap: () async {
                 await loginController.setRoleToAdmin();
 
                 Navigator.of(context).pushAndRemoveUntil(
                     MaterialPageRoute(
-                      builder: (context) => AdminHomeScreen(),
+                      builder: (context) => AdminDashBoardScreen(),
                     ),
                     (route) => false);
               },
-              child: Text('Admin '),
+              child: Container(
+                height: 40,
+                width: MediaQuery.of(context).size.width * .8,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Center(
+                  child: Text(
+                    'Admin ',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
             ),
           ],
         ),

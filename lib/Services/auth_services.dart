@@ -21,6 +21,20 @@ class AuthService {
     }
   }
 
+  Future<String?> getLoggedInUserId() async {
+    final User? user = _auth.currentUser;
+    return user?.uid;
+  }
+
+  Future<User?> getCurrentUser() async {
+    try {
+      return _auth.currentUser;
+    } catch (e) {
+      print("Error getting current user: $e");
+      return null;
+    }
+  }
+
   Future<void> createAccount(
     String email,
     String password,

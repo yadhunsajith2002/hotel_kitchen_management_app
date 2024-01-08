@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:hotel_kitchen_management_app/admin/screens/admin_home/admin_home.dart';
+import 'package:hotel_kitchen_management_app/admin/screens/admin_dashboard/admin_dashBoard_screen.dart';
 import 'package:hotel_kitchen_management_app/controller/login_controllers/login_controller.dart';
 import 'package:hotel_kitchen_management_app/pages/auth/login_screen/login_screen.dart';
-import 'package:hotel_kitchen_management_app/pages/chef_home_screen/chef_home_screen.dart';
+import 'package:hotel_kitchen_management_app/pages/chef/chef_home_screen/chef_home_screen.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -30,7 +30,7 @@ class _SplashScreenState extends State<SplashScreen> {
     if (userRole == 'admin') {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => AdminHomeScreen()),
+        MaterialPageRoute(builder: (context) => AdminDashBoardScreen()),
       );
     } else if (userRole == 'chef') {
       Navigator.pushReplacement(
