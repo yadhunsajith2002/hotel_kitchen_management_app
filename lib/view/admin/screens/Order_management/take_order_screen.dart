@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:hotel_kitchen_management_app/admin/screens/Order_management/oder_management.dart';
+import 'package:hotel_kitchen_management_app/view/admin/screens/Order_management/oder_management.dart';
 import 'package:hotel_kitchen_management_app/model/menu_model/menu_model.dart';
 import 'package:hotel_kitchen_management_app/utils/colors.dart';
 import 'package:hotel_kitchen_management_app/utils/text_styles.dart';

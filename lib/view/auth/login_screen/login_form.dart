@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hotel_kitchen_management_app/admin/screens/admin_dashboard/admin_dashBoard_screen.dart';
+import 'package:hotel_kitchen_management_app/view/admin/screens/admin_dashboard/admin_dashBoard_screen.dart';
 import 'package:hotel_kitchen_management_app/controller/login_controllers/login_controller.dart';
-import 'package:hotel_kitchen_management_app/utils/colors.dart';
+
 import 'package:hotel_kitchen_management_app/utils/text_styles.dart';
 import 'package:provider/provider.dart';
 
@@ -9,10 +9,10 @@ class LoginForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Access the LoginController instance
-    final loginController = Provider.of<LoginController>(context);
+    final provider = Provider.of<LoginController>(context);
 
     return Form(
-      key: loginController.formKey,
+      key: provider.formKey,
       child: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -31,7 +31,7 @@ class LoginForm extends StatelessWidget {
             ),
             SizedBox(height: 25),
             TextFormField(
-              controller: loginController.emailController,
+              controller: provider.emailController,
               decoration: InputDecoration(
                   labelText: 'Email',
                   border: OutlineInputBorder(
@@ -46,9 +46,16 @@ class LoginForm extends StatelessWidget {
             ),
             SizedBox(height: 25),
             TextFormField(
-              controller: loginController.passwordController,
-              obscureText: true,
+              controller: provider.passwordController,
+              obscureText: provider.isShow,
               decoration: InputDecoration(
+                  suffixIcon: InkWell(
+                      onTap: () {
+                        provider.obscureTextView();
+                      },
+                      child: Icon(provider.isShow
+                          ? Icons.visibility
+                          : Icons.visibility_off)),
                   labelText: 'Password',
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20))),
@@ -63,9 +70,9 @@ class LoginForm extends StatelessWidget {
             GestureDetector(
               onTap: () async {
                 // Check isLoading before calling login
-                if (!loginController.isLoading) {
-                  await loginController.setUserRole('chef');
-                  await loginController.login(context);
+                if (!provider.isLoading) {
+                  await provider.setUserRole('chef');
+                  await provider.login(context);
                 }
               },
               child: Container(
@@ -76,7 +83,7 @@ class LoginForm extends StatelessWidget {
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Center(
-                  child: loginController.isLoading
+                  child: provider.isLoading
                       ? CircularProgressIndicator()
                       : Text(
                           'Login',
@@ -96,7 +103,7 @@ class LoginForm extends StatelessWidget {
                 Text('Don\'t have an Account?'),
                 TextButton(
                   onPressed: () {
-                    loginController.goToCreateAccount(context);
+                    provider.goToCreateAccount(context);
                   },
                   child: Text('Sign Up'),
                 ),
@@ -104,7 +111,7 @@ class LoginForm extends StatelessWidget {
             ),
             InkWell(
               onTap: () async {
-                await loginController.setRoleToAdmin();
+                await provider.setRoleToAdmin();
 
                 Navigator.of(context).pushAndRemoveUntil(
                     MaterialPageRoute(

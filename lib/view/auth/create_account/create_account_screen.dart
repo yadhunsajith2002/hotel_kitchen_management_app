@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hotel_kitchen_management_app/global/widgets/custum_appBar.dart';
-import 'package:hotel_kitchen_management_app/pages/auth/create_account/create_account.dart';
+import 'package:hotel_kitchen_management_app/view/auth/create_account/create_account.dart';
 
 class CreateAccountScreen extends StatelessWidget {
   @override

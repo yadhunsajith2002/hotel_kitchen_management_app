@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hotel_kitchen_management_app/view/admin/data/data.dart';
+import 'package:hotel_kitchen_management_app/view/admin/model/inventory_model.dart';
 
 class InventoryManagementScreen extends StatefulWidget {
   @override
@@ -7,19 +9,6 @@ class InventoryManagementScreen extends StatefulWidget {
 }
 
 class _InventoryManagementScreenState extends State<InventoryManagementScreen> {
-  List<InventoryItem> inventoryItems = [
-    InventoryItem(id: 1, name: 'Flour', quantity: 10),
-    InventoryItem(id: 2, name: 'Sugar', quantity: 5),
-    InventoryItem(id: 1, name: 'Wheat', quantity: 10),
-    InventoryItem(id: 2, name: 'Milk', quantity: 5),
-    InventoryItem(id: 1, name: 'Maida', quantity: 10),
-    InventoryItem(id: 2, name: 'rawa', quantity: 5),
-
-    InventoryItem(id: 1, name: 'Meat', quantity: 10),
-    InventoryItem(id: 2, name: 'Beef', quantity: 5),
-    // Add more sample inventory items as needed
-  ];
-
   TextEditingController nameController = TextEditingController();
   TextEditingController quantityController = TextEditingController();
   bool isEditing = false;
@@ -168,12 +157,4 @@ class _InventoryManagementScreenState extends State<InventoryManagementScreen> {
       inventoryItems.removeWhere((item) => item.id == itemId);
     });
   }
-}
-
-class InventoryItem {
-  final int id;
-  String name;
-  int quantity;
-
-  InventoryItem({required this.id, required this.name, required this.quantity});
 }

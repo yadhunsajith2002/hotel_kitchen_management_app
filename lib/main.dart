@@ -1,10 +1,11 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:hotel_kitchen_management_app/controller/admin_home_controller/admin-home_controller.dart';
 import 'package:hotel_kitchen_management_app/controller/create_account_controller/create_acc_controller.dart';
 import 'package:hotel_kitchen_management_app/controller/login_controllers/login_controller.dart';
 import 'package:hotel_kitchen_management_app/firebase_options.dart';
-import 'package:hotel_kitchen_management_app/pages/splash_screen/splash_screen.dart';
+import 'package:hotel_kitchen_management_app/view/splash_screen/splash_screen.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -32,7 +33,10 @@ class MyApp extends StatelessWidget {
           create: (context) => LoginController(),
         ),
         ChangeNotifierProvider(
-          create: (context) => CreateAccountController(),
+          create: (context) => AuthController(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => AdminController(),
         ),
       ],
       child: MaterialApp(

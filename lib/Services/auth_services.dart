@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hotel_kitchen_management_app/view/auth/login_screen/login_screen.dart';
 import 'package:hotel_kitchen_management_app/controller/login_controllers/login_controller.dart';
-import 'package:hotel_kitchen_management_app/pages/auth/login_screen/login_screen.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;

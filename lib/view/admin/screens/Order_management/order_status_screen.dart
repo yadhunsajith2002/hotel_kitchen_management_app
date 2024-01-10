@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hotel_kitchen_management_app/admin/screens/Order_management/take_order_screen.dart';
+import 'package:hotel_kitchen_management_app/view/admin/screens/Order_management/take_order_screen.dart';
 import 'package:hotel_kitchen_management_app/utils/colors.dart';
+import 'package:hotel_kitchen_management_app/view/admin/screens/history_screen.dart';
 
 class OrderStatusScreen extends StatelessWidget {
   const OrderStatusScreen({Key? key});
@@ -29,7 +30,12 @@ class OrderStatusScreen extends StatelessWidget {
             ),
             SizedBox(height: 20),
             OrderStatusCard(
-              status: 'Completed',
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => HistoryScreen(),
+                ));
+              },
+              status: 'History',
             ),
           ],
         ),

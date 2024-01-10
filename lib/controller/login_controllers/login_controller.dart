@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hotel_kitchen_management_app/Services/auth_services.dart';
-import 'package:hotel_kitchen_management_app/pages/auth/create_account/create_account_screen.dart';
-import 'package:hotel_kitchen_management_app/pages/chef/chef_home_screen/chef_home_screen.dart';
+import 'package:hotel_kitchen_management_app/view/auth/create_account/create_account_screen.dart';
+import 'package:hotel_kitchen_management_app/view/chef/screen/chef_home_screen/chef_home_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginController extends ChangeNotifier {
@@ -108,5 +108,12 @@ class LoginController extends ChangeNotifier {
   Future<void> setRoleToAdmin() async {
     // Set the user role to 'admin' in SharedPreferences
     await setUserRole('admin');
+  }
+
+  bool isShow = false;
+
+  void obscureTextView() {
+    isShow = !isShow;
+    notifyListeners();
   }
 }

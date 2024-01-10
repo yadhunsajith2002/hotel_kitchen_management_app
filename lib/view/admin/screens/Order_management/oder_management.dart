@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:awesome_notifications/awesome_notifications.dart'; // Import the awesome_notifications package
 
-import 'package:hotel_kitchen_management_app/admin/screens/admin_dashboard/admin_dashBoard_screen.dart';
+import 'package:hotel_kitchen_management_app/view/admin/screens/admin_dashboard/admin_dashBoard_screen.dart';
 import 'package:hotel_kitchen_management_app/model/chef_model/chef_model.dart';
 import 'package:hotel_kitchen_management_app/model/order_model/order_model.dart';
 
@@ -145,11 +145,9 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
                                     itemCount: chefs.length,
                                     itemBuilder: (context, chefIndex) {
                                       ChefModel chef = chefs[chefIndex];
-                                      return InkWell(
-                                        onTap: () {},
-                                        child: Card(
-                                          child: ListTile(
-                                            title: Text(chef.name),
+                                      return Container(
+                                          padding: EdgeInsets.all(10),
+                                          child: InkWell(
                                             onTap: () async {
                                               BuildContext
                                                   dialogContext; // Store the reference to the context
@@ -181,10 +179,7 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
                                               await Future.delayed(
                                                   Duration(seconds: 2));
                                               dialogContext = context;
-                                              Navigator.pop(
-                                                  dialogContext); // Close the dialog using the stored context
-
-                                              // Navigate to ChefHomeScreen after the assignment is done
+                                              Navigator.pop(dialogContext);
                                               Navigator.pushReplacement(
                                                 dialogContext,
                                                 MaterialPageRoute(
@@ -193,9 +188,19 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
                                                 ),
                                               );
                                             },
-                                          ),
-                                        ),
-                                      );
+                                            child: Row(
+                                              children: [
+                                                CircleAvatar(
+                                                  backgroundImage: NetworkImage(
+                                                      "https://c8.alamy.com/comp/2F05NFR/hat-chef-logo-vector-illustration-design-2F05NFR.jpg"),
+                                                ),
+                                                SizedBox(
+                                                  width: 15,
+                                                ),
+                                                Text(chef.name),
+                                              ],
+                                            ),
+                                          ));
                                     },
                                   ),
                                 ),

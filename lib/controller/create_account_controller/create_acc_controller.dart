@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:hotel_kitchen_management_app/pages/auth/login_screen/login_screen.dart';
-import 'package:hotel_kitchen_management_app/pages/chef/chef_home_screen/chef_home_screen.dart';
+import 'package:hotel_kitchen_management_app/view/auth/login_screen/login_screen.dart';
+import 'package:hotel_kitchen_management_app/view/chef/screen/chef_home_screen/chef_home_screen.dart';
 import 'package:hotel_kitchen_management_app/services/auth_services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class CreateAccountController extends ChangeNotifier {
+class AuthController extends ChangeNotifier {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController chefNameController = TextEditingController();
@@ -13,6 +13,13 @@ class CreateAccountController extends ChangeNotifier {
   String? passwordError;
   String? selectedRole;
   bool isLoading = false; // Add isLoading variable
+
+  bool isShow = false;
+
+  void obscureTextView() {
+    isShow = !isShow;
+    notifyListeners();
+  }
 
   final GlobalKey<FormState> CformKey = GlobalKey<FormState>();
 
@@ -83,13 +90,6 @@ class CreateAccountController extends ChangeNotifier {
   void setLoading(bool value) {
     // Set loading state
     isLoading = value;
-    notifyListeners();
-  }
-
-  void _resetErrors() {
-    // Reset error messages
-    emailError = null;
-    passwordError = null;
     notifyListeners();
   }
 

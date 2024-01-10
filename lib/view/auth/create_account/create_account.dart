@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:hotel_kitchen_management_app/admin/screens/admin_dashboard/admin_dashBoard_screen.dart';
+
 import 'package:hotel_kitchen_management_app/controller/create_account_controller/create_acc_controller.dart';
-import 'package:hotel_kitchen_management_app/utils/colors.dart';
+
 import 'package:hotel_kitchen_management_app/utils/text_styles.dart';
 import 'package:provider/provider.dart';
 
+// ignore: must_be_immutable
 class CreateAccountForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Access the CreateAccountController instance
-    final createAccountController =
-        Provider.of<CreateAccountController>(context);
+    final provider = Provider.of<AuthController>(context);
 
     return Form(
-      key: createAccountController.CformKey,
+      key: provider.CformKey,
       child: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -31,7 +31,7 @@ class CreateAccountForm extends StatelessWidget {
               height: 25,
             ),
             TextFormField(
-              controller: createAccountController.chefNameController,
+              controller: provider.chefNameController,
               decoration: InputDecoration(
                   labelText: 'Chef\'s Name', // Add this line
                   border: OutlineInputBorder(
@@ -45,7 +45,7 @@ class CreateAccountForm extends StatelessWidget {
             ),
             SizedBox(height: 20),
             TextFormField(
-              controller: createAccountController.emailController,
+              controller: provider.emailController,
               decoration: InputDecoration(
                   labelText: 'Email',
                   border: OutlineInputBorder(
@@ -60,9 +60,16 @@ class CreateAccountForm extends StatelessWidget {
             ),
             SizedBox(height: 20),
             TextFormField(
-              controller: createAccountController.passwordController,
-              obscureText: true,
+              controller: provider.passwordController,
+              obscureText: provider.isShow,
               decoration: InputDecoration(
+                  suffixIcon: InkWell(
+                      onTap: () {
+                        provider.obscureTextView();
+                      },
+                      child: Icon(provider.isShow
+                          ? Icons.visibility
+                          : Icons.visibility_off)),
                   labelText: 'Password',
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20))),
@@ -77,13 +84,13 @@ class CreateAccountForm extends StatelessWidget {
             GestureDetector(
               onTap: () async {
                 // Start loading
-                createAccountController.setLoading(true);
+                provider.setLoading(true);
 
                 // Call the createAccount method
-                await createAccountController.createAccount(context);
+                await provider.createAccount(context);
 
                 // Stop loading
-                createAccountController.setLoading(false);
+                provider.setLoading(false);
               },
               child: Container(
                 height: 40,
@@ -93,7 +100,7 @@ class CreateAccountForm extends StatelessWidget {
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Center(
-                  child: createAccountController.isLoading
+                  child: provider.isLoading
                       ? CircularProgressIndicator()
                       : Text(
                           'Create Account',
@@ -112,7 +119,7 @@ class CreateAccountForm extends StatelessWidget {
                 Text('Already have an Account?'),
                 TextButton(
                   onPressed: () {
-                    createAccountController.goToCreateAccount(context);
+                    provider.goToCreateAccount(context);
                   },
                   child: Text('Login'),
                 ),

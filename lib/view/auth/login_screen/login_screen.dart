@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hotel_kitchen_management_app/global/widgets/custum_appBar.dart';
-import 'package:hotel_kitchen_management_app/pages/auth/login_screen/login_form.dart';
+import 'package:hotel_kitchen_management_app/view/auth/login_screen/login_form.dart';
 
 class LoginScreen extends StatelessWidget {
   @override

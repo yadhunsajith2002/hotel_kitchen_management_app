@@ -42,6 +42,8 @@ dependencies:
   fluttertoast: ^8.2.4
   google_fonts: ^6.1.0
   lottie: ^2.7.0
+  open_file: ^3.3.2
+  pdf: ^3.10.7
   provider: ^6.1.1
   shared_preferences: ^2.2.2
 
@@ -63,6 +65,7 @@ flutter:
   assets:
     - assets/animations/
     - assets/shutterstock_649541308_20191010160155.png
+    - assets/Roboto-Black.ttf
   #   - images/a_dot_ham.jpeg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

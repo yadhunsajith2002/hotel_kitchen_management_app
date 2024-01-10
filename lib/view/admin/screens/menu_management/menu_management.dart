@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hotel_kitchen_management_app/utils/text_styles.dart';
+import 'package:hotel_kitchen_management_app/view/admin/model/menu_model.dart';
 
 class MenuManagementScreen extends StatefulWidget {
   @override
@@ -173,12 +174,4 @@ class _MenuManagementScreenState extends State<MenuManagementScreen> {
   void _removeItem(String itemId) async {
     await menuCollection.doc(itemId).delete();
   }
-}
-
-class MenuItem {
-  final String id;
-  String name;
-  double price;
-
-  MenuItem({required this.id, required this.name, required this.price});
 }
