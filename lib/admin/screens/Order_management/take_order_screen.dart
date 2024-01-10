@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hotel_kitchen_management_app/admin/screens/Order_management/oder_management.dart';
+import 'package:hotel_kitchen_management_app/model/menu_model/menu_model.dart';
 import 'package:hotel_kitchen_management_app/utils/colors.dart';
 import 'package:hotel_kitchen_management_app/utils/text_styles.dart';
+
+import 'dart:async';
 
 class TakeOrderScreen extends StatefulWidget {
   const TakeOrderScreen({Key? key}) : super(key: key);
@@ -12,9 +15,42 @@ class TakeOrderScreen extends StatefulWidget {
 }
 
 class _TakeOrderScreenState extends State<TakeOrderScreen> {
-  List<MenuItem> selectedMenuItems = [];
+  List<MenuItemModel> selectedMenuItems = [];
   CollectionReference menuCollection =
       FirebaseFirestore.instance.collection('orders');
+
+  late StreamController<List<MenuItemModel>> _menuItemsController;
+
+  @override
+  void initState() {
+    super.initState();
+    _menuItemsController = StreamController<List<MenuItemModel>>.broadcast();
+    _fetchMenuItems();
+  }
+
+  @override
+  void dispose() {
+    _menuItemsController.close();
+    super.dispose();
+  }
+
+  void _fetchMenuItems() async {
+    try {
+      QuerySnapshot querySnapshot =
+          await FirebaseFirestore.instance.collection('menu').get();
+      List<MenuItemModel> menuItems = querySnapshot.docs.map((doc) {
+        return MenuItemModel(
+          id: doc.id,
+          name: doc['name'],
+          price: doc['price'] ?? 0.0,
+        );
+      }).toList();
+
+      _menuItemsController.add(menuItems);
+    } catch (e) {
+      print('Error fetching menu items: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,40 +58,28 @@ class _TakeOrderScreenState extends State<TakeOrderScreen> {
       appBar: AppBar(
         title: Text('Take Order'),
       ),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance.collection('menu').snapshots(),
+      body: StreamBuilder<List<MenuItemModel>>(
+        stream: _menuItemsController.stream,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else {
-            List<MenuItem> menuItems = snapshot.data!.docs.map((doc) {
-              return MenuItem(
-                id: doc.id,
-                name: doc['name'],
-                price: doc['price'] ?? 0.0,
-              );
-            }).toList();
+            List<MenuItemModel> menuItems = snapshot.data ?? [];
 
             return ListView.builder(
               itemCount: menuItems.length,
               itemBuilder: (context, index) {
-                // Use a local variable to track the selected state
-                bool isSelected = selectedMenuItems.contains(menuItems[index]);
+                MenuItemModel menuItem = menuItems[index];
+                bool isSelected = selectedMenuItems.contains(menuItem);
 
-                return InkWell(
-                  onTap: () {
-                    _handleCheckboxChange(!isSelected, menuItems[index]);
-                    setState(() {});
+                return CheckboxTile(
+                  item: menuItem,
+                  isSelected: isSelected,
+                  onChanged: (value) {
+                    _handleCheckboxChange(value!, menuItem);
                   },
-                  child: Card(
-                    color: isSelected ? Colors.yellow : null,
-                    child: ListTile(
-                      title: Text(
-                          '${menuItems[index].name} - \$${menuItems[index].price}'),
-                    ),
-                  ),
                 );
               },
             );
@@ -68,10 +92,11 @@ class _TakeOrderScreenState extends State<TakeOrderScreen> {
           onTap: () {
             _createOrder(selectedMenuItems);
             Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => OrderManagementScreen(),
-                ));
+              context,
+              MaterialPageRoute(
+                builder: (context) => OrderManagementScreen(),
+              ),
+            );
           },
           child: Container(
             height: 60,
@@ -90,7 +115,7 @@ class _TakeOrderScreenState extends State<TakeOrderScreen> {
     );
   }
 
-  void _handleCheckboxChange(bool value, MenuItem item) {
+  void _handleCheckboxChange(bool value, MenuItemModel item) {
     setState(() {
       if (value) {
         selectedMenuItems.add(item);
@@ -100,7 +125,7 @@ class _TakeOrderScreenState extends State<TakeOrderScreen> {
     });
   }
 
-  void _createOrder(List<MenuItem> selectedItems) async {
+  void _createOrder(List<MenuItemModel> selectedItems) async {
     try {
       // Create a new order document in the "orders" collection
       DocumentReference orderRef =
@@ -115,29 +140,34 @@ class _TakeOrderScreenState extends State<TakeOrderScreen> {
         }).toList(),
       });
 
-      // Optional: You can use the orderRef to navigate to the order details screen
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(
-      //     builder: (context) => OrderDetailsScreen(orderRef.id),
-      //   ),
-      // );
-
-      // Clear the selected items list
       setState(() {
         selectedMenuItems.clear();
       });
     } catch (e) {
       print('Error creating order: $e');
-      // Handle the error as needed
     }
   }
 }
 
-class MenuItem {
-  final String id;
-  final String name;
-  final double price;
+class CheckboxTile extends StatelessWidget {
+  final MenuItemModel item;
+  final bool isSelected;
+  final void Function(bool?)? onChanged;
 
-  MenuItem({required this.id, required this.name, required this.price});
+  const CheckboxTile({
+    required this.item,
+    required this.isSelected,
+    required this.onChanged,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return CheckboxListTile(
+        title: Text(
+          '${item.name} - \$${item.price}',
+        ),
+        value: isSelected,
+        onChanged: onChanged);
+  }
 }

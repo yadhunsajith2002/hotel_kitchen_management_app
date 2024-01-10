@@ -3,6 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:awesome_notifications/awesome_notifications.dart'; // Import the awesome_notifications package
 
 import 'package:hotel_kitchen_management_app/admin/screens/admin_dashboard/admin_dashBoard_screen.dart';
+import 'package:hotel_kitchen_management_app/model/chef_model/chef_model.dart';
+import 'package:hotel_kitchen_management_app/model/order_model/order_model.dart';
 
 import 'package:hotel_kitchen_management_app/utils/text_styles.dart';
 import 'package:lottie/lottie.dart';
@@ -13,9 +15,9 @@ class OrderManagementScreen extends StatefulWidget {
 }
 
 class _OrderManagementScreenState extends State<OrderManagementScreen> {
-  List<Order> orders = [];
-  List<Chef> chefs = []; // List to store chefs from Firestore
-  Chef? selectedChef; // Currently selected chef
+  List<OrderModel> orders = [];
+  List<ChefModel> chefs = []; // List to store chefs from Firestore
+  ChefModel? selectedChef; // Currently selected chef
   void initState() {
     super.initState();
     // Initialize Awesome Notifications in the initState method
@@ -56,7 +58,7 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
               // Debugging print statements
               print('Order ID: ${doc.id}');
 
-              return Order(
+              return OrderModel(
                 id: doc.id,
                 items: items,
               );
@@ -119,12 +121,12 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
                       chefs = snapshot.data!.docs.map((doc) {
                         // Check if 'chefName' field exists in the document
                         if (doc['chefName'] != null) {
-                          return Chef(id: doc.id, name: doc['chefName']);
+                          return ChefModel(id: doc.id, name: doc['chefName']);
                         } else {
                           // Handle the case where 'chefName' field is missing
                           print(
                               "Warning: 'chefName' field is missing in document ${doc.id}");
-                          return Chef(id: doc.id, name: 'N/A');
+                          return ChefModel(id: doc.id, name: 'N/A');
                         }
                       }).toList();
 
@@ -142,7 +144,7 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
                                   child: ListView.builder(
                                     itemCount: chefs.length,
                                     itemBuilder: (context, chefIndex) {
-                                      Chef chef = chefs[chefIndex];
+                                      ChefModel chef = chefs[chefIndex];
                                       return InkWell(
                                         onTap: () {},
                                         child: Card(
@@ -166,25 +168,16 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
                                                 },
                                               );
 
-                                              // Assume that the assignment logic is done here, replace it with your actual logic
-                                              // For example, you might want to save the assigned orders to Firestore
-                                              // Replace the following lines with your actual logic
-
-                                              // Get the selected chef's ID
                                               String selectedChefId = chef.id;
 
-                                              // Get the list of assigned orders (replace it with your actual data structure)
                                               List<Map<String, dynamic>>
                                                   assignedOrders =
                                                   orders[chefIndex].items;
-
-                                              // Save the assigned orders to Firestore with the selected chef's ID
                                               await saveAssignedOrders(
                                                   selectedChefId,
                                                   chef.name,
                                                   assignedOrders);
 
-                                              // Simulate an asynchronous operation (replace it with your logic)
                                               await Future.delayed(
                                                   Duration(seconds: 2));
                                               dialogContext = context;
@@ -258,33 +251,4 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
       ),
     );
   }
-}
-
-class Order {
-  final String id;
-  final List<Map<String, dynamic>> items;
-
-  Order({
-    required this.id,
-    required this.items,
-  });
-}
-
-class MenuItem {
-  final String id;
-  final String name;
-  final double price;
-
-  MenuItem({
-    required this.id,
-    required this.name,
-    required this.price,
-  });
-}
-
-class Chef {
-  final String id;
-  final String name;
-
-  Chef({required this.id, required this.name});
 }
